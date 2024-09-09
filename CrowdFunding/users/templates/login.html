@@ -2,15 +2,15 @@
 
 
 {% block 'title' %}
-    Register
+    Login
 {% endblock 'title' %}
 
 
 {% block 'content' %}
-    <h1>Register</h1>
+    <h1>Login</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Register</button>
+        <button type="submit" class="btn btn-primary">Login</button>
     </form>
 {% endblock 'content' %}

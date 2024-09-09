@@ -13,3 +13,5 @@ class User(models.Model):
     birth_date = models.DateField(null=True)
     facebook_profile = models.TextField(null=True)
     country = models.CharField(max_length=30,null=True)
+
+    USERNAME_FIELD = 'email'
