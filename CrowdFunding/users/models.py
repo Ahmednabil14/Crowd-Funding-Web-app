@@ -13,5 +13,5 @@ class User(models.Model):
     birth_date = models.DateField(null=True)
     facebook_profile = models.TextField(null=True)
     country = models.CharField(max_length=30,null=True)
-
+    is_active = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
