@@ -8,4 +8,22 @@
 
 {% block 'content' %}
     <h1>Home</h1>
+
+    <div className="container-fluid ms-0 px-2 me-0 d-flex justify-content-center row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4 gy-5 mt-5">
+        {% for project in projects %}
+        <div className="col">
+            <div className="card mb-3 h-100" style={{boxShadow: "0 2px 8px rgba(0, 0, 0, .1)"}}>
+              <img src="{{ project.project_pic }}" className="card-img-top" alt="Project Image"/>
+              <div className="card-body">
+                    <h3 className="card-title btn">{{ project.title }}</h3>
+                    <h5 className="card-title btn">{{ project.total_target }}</h5>
+                    <h5 className="card-title btn">{{ project.total_donations }}</h5>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <p className="card-text m-0" style={{color: "rgba(0, 0, 0, .6)"}}>{{ project.end_date }}</p>
+                    </div>
+              </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 {% endblock 'content' %}
