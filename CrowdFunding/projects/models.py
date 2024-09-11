@@ -9,7 +9,7 @@ class Project(models.Model):
     total_donations = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField()
-    project_pic = models.FileField(upload_to="projects/images/profile_image", null=True, blank=True)
+    project_pic = models.ImageField(upload_to="projects/images/profile_image", null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -19,3 +19,4 @@ class Project(models.Model):
 
         self.total_donations += amount
         self.save()
+
