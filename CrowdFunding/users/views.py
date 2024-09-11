@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .register_form import RegisterForm
 from .login_form import LoginForm
 from .models import User
+from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
@@ -18,7 +19,7 @@ def send_activation_email(user, request):
     send_mail(
         subject,
         message,
-        'an63805@gmail.com',  
+        'ahmednabil14499@gmail.com',  
         [user.email],  
         fail_silently=False,
     )
@@ -28,16 +29,23 @@ def Register(request):
     context = {}
     context["form"] = form
     if request.method == "POST":
-        user = RegisterForm(request.POST, request.FILES)
-        if user.is_valid():
-            user_instance = user.save(commit=False)  
-            user_instance.is_active = False  
-            user_instance.save()  
-            send_activation_email(user_instance, request)
-            messages.success(request, f'Dear {user_instance.first_name}, please go to your email inbox and click on the received activation link to confirm and complete the registration. Check your spam folder if necessary.')
-            return redirect('login')
+        form = RegisterForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = User.objects.create_user(
+                email = form.cleaned_data["email"],
+                password = form.cleaned_data["password"]
+            )
+            user.first_name = form.cleaned_data["first_name"]
+            user.last_name = form.cleaned_data["last_name"]
+            user.phone = form.cleaned_data["phone"]
+            user.profile_pic = form.cleaned_data["profile_pic"]
+            user.is_active = False  
+            send_activation_email(user, request)
+            messages.success(request, f'Dear {user.first_name}, please go to your email inbox and click on the received activation link to confirm and complete the registration. Check your spam folder if necessary.')
+            user.save()
+            return redirect("login")
         else:
-            print(user.errors)
+            print(form.errors)
 
     return render(request, 'register.html', context=context)
 
@@ -46,9 +54,17 @@ def Login(request):
     context = {}
     context["form"] = form
     if request.method == "POST":
-        email = request.POST["email"]
-        user = User.objects.get(email=email)
-        print(user)
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=email, password=password)
+            if user is not None:
+                login(request, user)
+            else:
+                return render(request, 'login.html', context={"error": "Invalid username or password"})
+        else:
+            print(form.errors)
     return render(request, 'login.html', context=context)
 
 def activate(request, uidb64):
@@ -62,3 +78,7 @@ def activate(request, uidb64):
     except User.DoesNotExist:
         messages.error(request, 'Invalid activation link')
         return redirect('register')
+    
+def Logout(request):
+    logout(request)
+    return redirect('login')

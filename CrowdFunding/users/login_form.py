@@ -1,19 +1,15 @@
 from django import forms
-from users.models import User
+from django.contrib.auth.forms import AuthenticationForm
 
-class LoginForm(forms.ModelForm):
 
+class LoginForm(AuthenticationForm):
+    username = forms.EmailField(
+        max_length=254,
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+        label='Email'
+    )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
-        label='Password'
+        max_length=255,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
     )
 
-
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter a valid email'})
-    )
-
-
-    class Meta:
-        model = User
-        fields = ('email', 'password')

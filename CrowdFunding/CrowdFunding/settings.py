@@ -28,12 +28,12 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'  
-EMAIL_HOST_PASSWORD = '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'  
-DEFAULT_FROM_EMAIL = 'an63805@gmail.com'
+EMAIL_HOST_USER = 'ahmednabil14499@gmail.com'  
+EMAIL_HOST_PASSWORD = 'qnvv nxle bbzv opwl'  
+# DEFAULT_FROM_EMAIL = 'an63805@gmail.com'
 
 
 
@@ -132,3 +132,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
