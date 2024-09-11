@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block 'title' %}
+    User Info
+{% endblock 'title' %}
+
+{% block 'content' %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-gradient-primary text-black text-center py-4">
+                    <h2 class="mb-0">User Information</h2>
+                </div>
+                <div class="card-body text-center">
+                    <div class="user-avatar mb-4">
+                        {% if user.profile_pic %}
+                            <img src="{{ user.profile_pic.url }}" alt="Profile Picture" class="rounded-circle img-fluid border border-3 border-primary shadow" style="width: 150px; height: 150px;">
+                        {% else %}
+                            <p class="text-muted">No profile picture uploaded.</p>
+                        {% endif %}
+                    </div>
+                    <h4 class="card-title">{{ user.first_name }} {{ user.last_name }}</h4>
+
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item">
+                            <strong>Email: </strong>
+                            <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Phone: </strong>
+                            <a href="tel:{{ user.phone }}" class="text-decoration-none">{{ user.phone }}</a>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Last Login: </strong>
+                            <span class="text-muted">{{ user.last_login }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: Include Bootstrap JS and Popper for tooltips -->
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+{% endblock 'content' %}

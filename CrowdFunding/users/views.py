@@ -79,6 +79,15 @@ def activate(request, uidb64):
         messages.error(request, 'Invalid activation link')
         return redirect('register')
     
+
+
+def user_Info(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    return render(request, 'user.html', {'user': request.user})
+
+
+
 def Logout(request):
     logout(request)
     return redirect('login')
