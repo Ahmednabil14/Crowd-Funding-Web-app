@@ -5,6 +5,15 @@
 {% endblock %}
 
 {% block 'content' %}
+{% if messages %}
+{% for message in messages %}
+    {% if message.tags == "warning" %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endif %}
+{% endfor %}
+{% endif %}
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -13,6 +22,7 @@
                 <img src="{{ project.project_pic.url }}" class="card-img-top" alt="Project Image" style="height: 100%; object-fit: cover;" />
                 <div class="card-body">
                     <h3 class="card-title fw-bold text-center">{{ project.title }}</h3>
+                    <h2 class="card-title fw-bold text-center">{{ project.average_rating }} ★</h2>
                     <p class="card-text fw-bold text-center mb-2">Target: {{ project.total_target }} $</p>
                     <p class="card-text fw-bold text-center mb-2">Total Donations: {{ project.total_donations }} $</p>
                     <p class="card-text text-center mb-4" style="color: rgba(0, 0, 0, .6);"> {{ project.details }}</p>
@@ -44,7 +54,25 @@
                          
                         </div>
                         <!---------------------------------------------------------------------------------------->
-                              <!-- Comment Form -->
+                            <!-- Rating Form -->
+                         <div class="mb-4">
+                            <h5 class="text-center">Rate This Project:</h5>
+                            <form action="{% url 'show_project' project.id %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="horizontal-radio-group">
+                                        <label><input type="radio" name="rating" value="1" {% if rating and rating.value == 1 %}checked{% endif %}> 1</label>
+                                        <label><input type="radio" name="rating" value="2" {% if rating and rating.value == 2 %}checked{% endif %}> 2</label>
+                                        <label><input type="radio" name="rating" value="3" {% if rating and rating.value == 3 %}checked{% endif %}> 3</label>
+                                        <label><input type="radio" name="rating" value="4" {% if rating and rating.value == 4 %}checked{% endif %}> 4</label>
+                                        <label><input type="radio" name="rating" value="5" {% if rating and rating.value == 5 %}checked{% endif %}> 5</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Rating</button>
+                            </form>
+                        </div>
+                        <!---------------------------------------------------------------------------------------->
+                        <!-- Comment Form -->
                               <div class="mb-4">
                                 <h5 class="text-center">Leave a Comment:</h5>
                                 <form action="{% url 'show_project' project.id %}" method="post">
