@@ -32,14 +32,8 @@ EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'apikey'
-<<<<<<< HEAD
+DEFAULT_FROM_EMAIL = 'an63805@gmail.com'
 EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = 'an63805@gmail.com'
-
-=======
-DEFAULT_FROM_EMAIL = 'an63805@gmail.com'
-EMAIL_HOST_PASSWORD = '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'
->>>>>>> a9f1a1c469cee785db2dac4a93239845c4835fd6
 
 
 
