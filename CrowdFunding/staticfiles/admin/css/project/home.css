@@ -1,0 +1,33 @@
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    height: 300px; 
+}
+
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem; 
+}
+.description-text {
+    flex-grow: 1; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    margin-bottom: 1rem; 
+}
+
+
+.card-text {
+    margin-bottom: 0;
+}
+
+.btn-dark {
+    align-self: center;
+    margin-top: auto; 
+}
+
+
+.card {
+    border: none; 
+    border-radius: 0.5rem; 
+}

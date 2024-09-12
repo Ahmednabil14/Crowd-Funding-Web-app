@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+   Project Details
+{% endblock %}
+
+{% block 'content' %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <img src="{{ project.project_pic.url }}" class="card-img-top" alt="Project Image" style="height: 100%; object-fit: cover;" />
+                <div class="card-body">
+                    <h3 class="card-title fw-bold text-center">{{ project.title }}</h3>
+                    <p class="card-text fw-bold text-center mb-2">Target: {{ project.total_target }} $</p>
+                    <p class="card-text fw-bold text-center mb-2">Total Donations: {{ project.total_donations }} $</p>
+                    <p class="card-text text-center mb-4" style="color: rgba(0, 0, 0, .6);"> {{ project.details }}</p>
+                    <p class="card-text text-center fw-bold" style="color: rgba(0, 0, 0, .6);">End Date: {{ project.end_time }}</p>
+                    
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="d-flex mb-4">
+                            <a href="{% url 'edit_project' project.id %}" class="btn btn-primary me-2">Edit</a>
+                            <form action="{% url 'delete_project' project.id %}" method="post" onsubmit="return confirm('Are you sure you want to delete this project?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                        <div class="d-flex mb-4">
+                            <a href="#" class="btn btn-success me-2">Donate</a>
+                            <a href="#" class="btn btn-warning">Report</a>
+                        </div>
+                        <a href="{% url 'home' %}" class="btn btn-dark d-block">Back to Project List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock 'content' %}
