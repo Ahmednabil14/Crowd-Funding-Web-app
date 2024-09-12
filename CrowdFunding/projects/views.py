@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from .form import ProjectForm , CommentForm
-from .models import Project, Comment
+from .models import Project, Comment,Rating
 from decimal import Decimal
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView
@@ -58,6 +58,7 @@ def show_project(request, id):
     project = get_object_or_404(Project, pk=id)
     comments = project.comments.filter(active=True)
     new_comment = None
+    rating=None
 
     if request.method == "POST":
         # Handle donation
@@ -77,23 +78,51 @@ def show_project(request, id):
             comments = project.comments.filter(active=True)
         else:
             messages.error(request, 'There was an error with your comment.')
+    
+ # Handle rating submission
+        if 'rating' in request.POST:
+            rating_value = request.POST.get('rating')
+            if rating_value:
+                if request.user.is_authenticated:
+                    rating_value = int(rating_value)
+                    rating, created = Rating.objects.get_or_create(
+                        project=project,
+                        user=request.user,
+                        defaults={'value': rating_value}
+                    )
+                    if not created:
+                        rating.value = rating_value
+                        rating.save()
+                    project.update_average_rating()
+                    messages.success(request, 'Your rating has been submitted.')
+                else:
+                    messages.warning(request, 'Please Login First')
+
+            else:
+                messages.error(request, 'Invalid rating value.')
+        else:
+            messages.error(request, 'Rating value is required.')
     else:
         comment_form = CommentForm()
+
+        if request.user.is_authenticated:
+            rating = Rating.objects.filter(project=project, user=request.user).first()
+        else:
+            rating = None
     
     user_donation = project.get_user_donations(request.user)
     print(f"You have donated {user_donation} to this project.")
-
     context = {
         'project': project,
         'comments': comments,
         'new_comment': new_comment,
         'comment_form': comment_form,
+        'rating': rating,
         'user_donation': user_donation 
     }
     
-
-    
     return render(request, 'show_project.html', context)
+
 
 class SearchResultsView(ListView):
     model = Project
