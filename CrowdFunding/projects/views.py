@@ -55,6 +55,13 @@ def home(request):
 
 def show_project(request,id):
     project = get_object_or_404(Project, pk=id)
+    if request.method == "POST":
+        amount = Decimal(request.POST.get('amount', '0'))
+        if amount > 0:
+            project.add_donation(amount)
+            messages.success(request, f'Thank you for your contribution of {amount}.')
+        else:
+            messages.error(request, 'Invalid donation amount.')
     context={"project" :project}
     return render(request,'show_project.html',context=context)
 
