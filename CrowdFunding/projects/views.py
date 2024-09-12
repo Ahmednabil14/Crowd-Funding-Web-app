@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from .form import ProjectForm
+from .form import ProjectForm , CommentForm
 from .models import Project
 from decimal import Decimal
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 
@@ -53,18 +54,42 @@ def home(request):
     context["projects"] = projects
     return render(request, 'home.html', context)
 
-def show_project(request,id):
+def show_project(request, id):
     project = get_object_or_404(Project, pk=id)
+    comments = project.comments.filter(active=True)
+    new_comment = None
+
     if request.method == "POST":
+        # Handle donation
         amount = Decimal(request.POST.get('amount', '0'))
         if amount > 0:
             project.add_donation(amount)
             messages.success(request, f'Thank you for your contribution of {amount}.')
         else:
             messages.error(request, 'Invalid donation amount.')
-    context={"project" :project}
-    return render(request,'show_project.html',context=context)
 
+        # Handle comment submission
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.project = project  
+            new_comment.active = True
+            new_comment.save()
+            messages.success(request, 'Your comment has been posted.')
+            comments = project.comments.filter(active=True)
+        else:
+            messages.error(request, 'There was an error with your comment.')
+    else:
+        comment_form = CommentForm()
+
+    context = {
+        'project': project,
+        'comments': comments,
+        'new_comment': new_comment,
+        'comment_form': comment_form,
+    }
+    
+    return render(request, 'show_project.html', context)
 
 class SearchResultsView(ListView):
     model = Project
@@ -72,7 +97,7 @@ class SearchResultsView(ListView):
     context_object_name = 'projects'
     def get_queryset(self):  
         query = self.request.GET.get("q")
-        print("Search query:", query)  # Debugging step
+        print("Search query:", query) 
         object_list = Project.objects.filter(
             Q(title__icontains=query)
         )

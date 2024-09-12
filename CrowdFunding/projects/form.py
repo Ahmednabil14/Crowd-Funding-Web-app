@@ -1,5 +1,5 @@
 from django import forms
-from projects.models import Project
+from projects.models import Project , Comment
 
 class ProjectForm(forms.ModelForm):
     title = forms.CharField(
@@ -31,3 +31,13 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = ('title', 'details', 'total_target', 'project_pic', 'end_time')
     
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('name', 'email', 'body')
+        widgets = {
+            'body': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your comment'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Name'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email'}),
+        }

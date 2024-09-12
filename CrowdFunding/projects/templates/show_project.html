@@ -43,12 +43,39 @@
                          
                         </div>
                         <!---------------------------------------------------------------------------------------->
-                        
+                              <!-- Comment Form -->
+                              <div class="mb-4">
+                                <h5 class="text-center">Leave a Comment:</h5>
+                                <form action="{% url 'show_project' project.id %}" method="post">
+                                    {% csrf_token %}
+                                    {{ comment_form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                                </form>
+                            </div>
+
+
                         <a href="{% url 'home' %}" class="btn btn-dark d-block">Back to Project List</a>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="mt-4">
+        <h4 class="text-center">Comments:</h4>
+        {% for comment in comments %}
+        <div class="comments" style="padding: 10px; border-bottom: 1px solid #ddd;">
+            <p class="font-weight-bold">
+                {{ comment.name }}
+                <span class="text-muted font-weight-normal">
+                    {{ comment.created_on }}
+                </span>
+            </p>
+            <p>{{ comment.body|linebreaks }}</p>
+        </div>
+        {% empty %}
+        <p class="text-center">No comments yet.</p>
+        {% endfor %}
     </div>
 </div>
 {% endblock 'content' %}

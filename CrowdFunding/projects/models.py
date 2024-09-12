@@ -20,3 +20,16 @@ class Project(models.Model):
         self.total_donations += amount
         self.save()
 
+class Comment(models.Model):
+    project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='comments')
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField(max_length=4000)
+    created_on = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['created_on']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.name)
