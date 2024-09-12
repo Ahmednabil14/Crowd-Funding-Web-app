@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib import messages
-
+from projects.models import Project
 # Create your views here.
 
 def send_activation_email(user, request):
@@ -84,7 +84,18 @@ def activate(request, uidb64):
 def user_Info(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'user.html', {'user': request.user})
+    projects_with_donations = Project.objects.filter(donations__has_key=str(request.user.id))
+
+    user_donations = []
+    for project in projects_with_donations:
+        donation_amount = project.get_user_donations(request.user)
+        user_donations.append({
+            'project': project,
+            'donation_amount': donation_amount
+        })
+    
+    return render(request, 'user.html', {'user': request.user,  'user_donations': user_donations})
+
 
 
 

@@ -63,7 +63,7 @@ def show_project(request, id):
         # Handle donation
         amount = Decimal(request.POST.get('amount', '0'))
         if amount > 0:
-            project.add_donation(amount)
+            project.add_donation(amount, request.user)
             messages.success(request, f'Thank you for your contribution of {amount}.')
         else:
             messages.error(request, 'Invalid donation amount.')
@@ -81,13 +81,19 @@ def show_project(request, id):
             messages.error(request, 'There was an error with your comment.')
     else:
         comment_form = CommentForm()
+    
+    user_donation = project.get_user_donations(request.user)
+    print(f"You have donated {user_donation} to this project.")
 
     context = {
         'project': project,
         'comments': comments,
         'new_comment': new_comment,
         'comment_form': comment_form,
+        'user_donation': user_donation 
     }
+    
+
     
     return render(request, 'show_project.html', context)
 

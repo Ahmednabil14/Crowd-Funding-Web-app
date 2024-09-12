@@ -1,5 +1,8 @@
 from django.db import models
 from users.models import User
+from django.db.models import JSONField 
+from users.models import User
+
 
 class Project(models.Model):
 
@@ -11,14 +14,26 @@ class Project(models.Model):
     end_time = models.DateTimeField()
     project_pic = models.ImageField(upload_to="projects/images/profile_image", null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    donations = JSONField(default=dict)
 
     def __str__(self):
         return self.title
 
-    def add_donation(self, amount):
+    def add_donation(self, amount, user):
 
         self.total_donations += amount
+
+        user_id = str(user.id)  
+
+        if user_id in self.donations:
+            self.donations[user_id] += float(amount)
+        else:
+            self.donations[user_id] = float(amount)
+
         self.save()
+    def get_user_donations(self, user):
+        user_id = str(user.id)
+        return self.donations.get(user_id, 0)
 
 class Comment(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='comments')
