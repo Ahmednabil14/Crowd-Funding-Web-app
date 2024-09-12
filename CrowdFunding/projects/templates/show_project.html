@@ -66,12 +66,12 @@
         {% for comment in comments %}
         <div class="comments" style="padding: 10px; border-bottom: 1px solid #ddd;">
             <p class="font-weight-bold">
-                {{ comment.name }}
+                {{ comment.user.first_name }} {{ comment.user.last_name }}
                 <span class="text-muted font-weight-normal">
                     {{ comment.created_on }}
                 </span>
             </p>
-            <p>{{ comment.body|linebreaks }}</p>
+            <p>{{ comment.comment|linebreaks }}</p>
         </div>
         {% empty %}
         <p class="text-center">No comments yet.</p>

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from .form import ProjectForm , CommentForm
-from .models import Project
+from .models import Project, Comment
 from decimal import Decimal
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView
@@ -71,10 +71,8 @@ def show_project(request, id):
         # Handle comment submission
         comment_form = CommentForm(data=request.POST)
         if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.project = project  
-            new_comment.active = True
-            new_comment.save()
+            new_comment = Comment.objects.create(project=project, user=request.user,
+                                   comment=comment_form.cleaned_data.get('comment'), active=True)
             messages.success(request, 'Your comment has been posted.')
             comments = project.comments.filter(active=True)
         else:

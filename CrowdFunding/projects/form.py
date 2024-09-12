@@ -33,11 +33,11 @@ class ProjectForm(forms.ModelForm):
     
 
 class CommentForm(forms.ModelForm):
+    comment = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Comment'}),
+        label='Comment'
+    )
     class Meta:
         model = Comment
-        fields = ('name', 'email', 'body')
-        widgets = {
-            'body': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Your comment'}),
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your Name'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your Email'}),
-        }
+        fields = ('comment',)

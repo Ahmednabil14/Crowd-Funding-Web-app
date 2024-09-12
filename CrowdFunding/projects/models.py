@@ -22,9 +22,8 @@ class Project(models.Model):
 
 class Comment(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='comments')
-    name = models.CharField(max_length=80)
-    email = models.EmailField()
-    body = models.TextField(max_length=4000)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=4000)
     created_on = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=False)
 
