@@ -3,7 +3,8 @@ from .form import ProjectForm
 from .models import Project
 from decimal import Decimal
 from django.contrib import messages
-
+from django.views.generic import TemplateView, ListView
+from django.db.models import Q
 # Create your views here.
 
 
@@ -56,3 +57,16 @@ def show_project(request,id):
     project = get_object_or_404(Project, pk=id)
     context={"project" :project}
     return render(request,'show_project.html',context=context)
+
+
+class SearchResultsView(ListView):
+    model = Project
+    template_name = 'search_result.html'
+    context_object_name = 'projects'
+    def get_queryset(self):  
+        query = self.request.GET.get("q")
+        print("Search query:", query)  # Debugging step
+        object_list = Project.objects.filter(
+            Q(title__icontains=query)
+        )
+        return object_list

@@ -15,7 +15,12 @@
         </form>
     </div>
 </div>
-<div class="container-fluid mt-5 bg-danger">
+
+<h1>Search Results</h1>
+<br><br><br>
+
+{% if projects %}
+<div class="container-fluid mt-5">
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-3 g-4">
         {% for project in projects %}
         <div class="col d-flex justify-content-center">
@@ -35,5 +40,8 @@
         {% endfor %}
     </div>
 </div>
+{% else %}
+    <p class="text-center">No projects found for your search query.</p>
+{% endif %}
 
 {% endblock 'content'%}
