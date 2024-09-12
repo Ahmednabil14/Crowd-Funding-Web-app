@@ -19,7 +19,7 @@ def send_activation_email(user, request):
     send_mail(
         subject,
         message,
-        'ahmednabil14499@gmail.com',  
+        'an63805@gmail.com',  
         [user.email],  
         fail_silently=False,
     )
