@@ -11,6 +11,7 @@
         <form method="get" action="{% url 'search_result' %}">
             <div class="input-group">
                 <input type="text" class="form-control py-2" name="q" placeholder="Search projects..." aria-label="Search projects">
+                <input type="text" name="tags" placeholder="Tags (comma separated)" value="{{ request.GET.tags }}">
                 <button class="btn btn-dark" type="submit">Search</button>
             </div>
         </form>

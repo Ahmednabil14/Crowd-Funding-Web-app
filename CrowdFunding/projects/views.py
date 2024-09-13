@@ -138,10 +138,22 @@ class SearchResultsView(ListView):
     model = Project
     template_name = 'search_result.html'
     context_object_name = 'projects'
-    def get_queryset(self):  
+
+    def get_queryset(self):
         query = self.request.GET.get("q")
-        print("Search query:", query) 
-        object_list = Project.objects.filter(
-            Q(title__icontains=query)
-        )
+        tag_query = self.request.GET.get('tags', '')
+
+        search_query = Q()
+
+        if query:
+            search_query &= Q(title__icontains=query)
+        if tag_query:
+            tags = tag_query.split(',')
+            tags = [tag.lower() for tag in tags]
+            tag_queries = Q()
+            for tag in tags:
+                tag_queries |= Q(tags__name__iexact=tag)
+            search_query &= tag_queries
+
+        object_list = Project.objects.filter(search_query).distinct()
         return object_list
