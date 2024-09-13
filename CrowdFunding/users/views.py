@@ -8,7 +8,12 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib import messages
 from projects.models import Project
+<<<<<<< HEAD
 
+=======
+from .update_form import *
+# Create your views here.
+>>>>>>> 59d52fefeb3a00e6b1e10b05ecd2c76851f518ac
 
 def send_activation_email(user, request):
     subject = "Activate your account"
@@ -61,6 +66,7 @@ def Login(request):
             user = authenticate(username=email, password=password)
             if user is not None:
                 login(request, user)
+                return redirect("home")
             else:
                 return render(request, 'login.html', context={"error": "Invalid username or password"})
         else:
@@ -85,6 +91,7 @@ def user_Info(request):
     if not request.user.is_authenticated:
         return redirect('login')
     projects_with_donations = Project.objects.filter(donations__has_key=str(request.user.id))
+    user_projects=Project.objects.filter(user=request.user)
 
     user_donations = []
     for project in projects_with_donations:
@@ -93,10 +100,26 @@ def user_Info(request):
             'project': project,
             'donation_amount': donation_amount
         })
-    
-    return render(request, 'user.html', {'user': request.user,  'user_donations': user_donations})
 
 
+    return render(request, 'user.html', {'user': request.user,  'user_donations': user_donations,'user_projects': user_projects})
+
+
+
+def update(request):
+    context = {}
+    form = UpdateForm(instance=request.user)
+    context["form"] = form
+    if request.method == "POST":
+        form = UpdateForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            update_data = {}
+            for key, value in form.cleaned_data.items():
+                if value:
+                    update_data[key] = value
+            User.objects.filter(id=request.user.id).update(**update_data)
+            return redirect('user')
+    return render(request, "update.html", context)
 
 
 def Logout(request):

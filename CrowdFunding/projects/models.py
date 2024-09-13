@@ -1,6 +1,6 @@
 from django.db import models
 from users.models import User
-from django.db.models import JSONField 
+from django.db.models import JSONField,Avg 
 from users.models import User
 
 
@@ -9,12 +9,20 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
 
     title = models.CharField(max_length=255)
     details = models.TextField()
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     total_donations = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    tags = models.ManyToManyField(Tag)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField()
     project_pic = models.ImageField(upload_to="projects/images/profile_image", null=True, blank=True)
@@ -40,6 +48,14 @@ class Project(models.Model):
     def get_user_donations(self, user):
         user_id = str(user.id)
         return self.donations.get(user_id, 0)
+    
+    def update_average_rating(self):
+        avg_rating = self.ratings.aggregate(Avg('value'))['value__avg']
+        if avg_rating is not None:
+            self.average_rating = avg_rating
+        else:
+            self.average_rating = 0.00
+        self.save()
 
 class Comment(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='comments')
@@ -53,3 +69,19 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment {} by {}'.format(self.body, self.name)
+<<<<<<< HEAD
+=======
+
+
+class Rating(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='ratings')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    value = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)]) 
+
+    class Meta:
+        unique_together = ('project', 'user')
+
+    def __str__(self):
+        return f'{self.value} stars for {self.project.title}'
+    
+>>>>>>> 59d52fefeb3a00e6b1e10b05ecd2c76851f518ac
