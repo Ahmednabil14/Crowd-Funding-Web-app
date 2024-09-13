@@ -7,8 +7,6 @@ from django.views.generic import TemplateView, ListView
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 # Create your views here.
-
-
 def create_project(request):
     if request.user.is_authenticated:
         context = {}

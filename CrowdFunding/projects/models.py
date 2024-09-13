@@ -69,8 +69,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment {} by {}'.format(self.body, self.name)
-<<<<<<< HEAD
-=======
 
 
 class Rating(models.Model):
@@ -84,4 +82,3 @@ class Rating(models.Model):
     def __str__(self):
         return f'{self.value} stars for {self.project.title}'
     
->>>>>>> 59d52fefeb3a00e6b1e10b05ecd2c76851f518ac

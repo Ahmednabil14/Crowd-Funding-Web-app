@@ -8,12 +8,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib import messages
 from projects.models import Project
-<<<<<<< HEAD
-
-=======
 from .update_form import *
 # Create your views here.
->>>>>>> 59d52fefeb3a00e6b1e10b05ecd2c76851f518ac
 
 def send_activation_email(user, request):
     subject = "Activate your account"
