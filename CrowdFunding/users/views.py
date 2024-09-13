@@ -101,6 +101,14 @@ def user_Info(request):
     return render(request, 'user.html', {'user': request.user,  'user_donations': user_donations,'user_projects': user_projects})
 
 
+def delete_user(request):
+    if request.method == "POST":
+        request.user.delete()
+        return redirect('login')
+    else:
+        return render(request, 'delete_user.html')
+
+
 
 def update(request):
     context = {}
