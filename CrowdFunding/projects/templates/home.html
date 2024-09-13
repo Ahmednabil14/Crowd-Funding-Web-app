@@ -18,6 +18,31 @@
     </div>
 </div>
 <div class="container-fluid mt-5">
+    <h2 class="text-center mb-4">Latest 5 Projects</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-3 g-4">
+        {% for project in projects5 %}
+        <div class="col d-flex justify-content-center">
+            <div class="card h-100 d-flex flex-column" style="width: 18rem; box-shadow: 0 2px 8px rgba(0, 0, 0, .1);">
+                <img src="{{ project.project_pic.url }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="Project Image"/>
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title fw-bold text-center">{{ project.title }}</h3>
+                    <h2 class="card-title fw-bold text-center">{{ project.average_rating }} ★</h2>
+                    <p class="fw-bold">Target: {{ project.total_target }} $</p>
+                    <p class="fw-bold">Total Donations: {{ project.total_donations }} $</p>
+                    <p class="fw-bold">Description:</p>
+                    <p class="description-text">{{ project.details|truncatewords:20 }}</p>
+                    <p class="fw-bold">Category: {{ project.category }} </p>
+                    <p class="card-text fw-bold m-0" style="color: rgba(0, 0, 0, .6); font-size:13px;">End Date:<br>{{ project.end_time }}</p>
+                    <a href="{% url 'show_project' project.id %}" class="btn btn-dark mt-auto">Show Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="container-fluid mt-5">
+    <h2 class="text-center mb-4">All Projects</h2>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-3 g-4">
         {% for project in projects %}
         <div class="col d-flex justify-content-center">

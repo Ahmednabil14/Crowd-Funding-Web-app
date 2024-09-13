@@ -59,9 +59,13 @@ def delete_project(request,id):
 
 def home(request):
     context = {}
-    projects = Project.objects.all()
+    projects = Project.objects.order_by('-id')
+    projects5 = projects[:5]
+    context["projects5"] = projects5
     context["projects"] = projects
+
     return render(request, 'home.html', context)
+
 
 def show_project(request, id):
     project = get_object_or_404(Project, pk=id)
