@@ -126,13 +126,16 @@ def show_project(request, id):
     
     user_donation = project.get_user_donations(request.user)
     print(f"You have donated {user_donation} to this project.")
+    similar_projects = Project.objects.filter(category=project.category).exclude(id=project.id)
     context = {
         'project': project,
         'comments': comments,
         'new_comment': new_comment,
         'comment_form': comment_form,
         'rating': rating,
-        'user_donation': user_donation 
+        'user_donation': user_donation,
+        'similar_projects':similar_projects
+
     }
     
     return render(request, 'show_project.html', context)
