@@ -16,7 +16,11 @@ def create_project(request):
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES)
         if form.is_valid():
-            Project.objects.create(user=request.user, **form.cleaned_data)
+            data = form.cleaned_data
+            tags = form.cleaned_data['tags']
+            del data['tags']
+            project = Project.objects.create(user=request.user, **data)
+            project.tags.set(tags)
             return redirect("home")
     return render(request, 'create_project.html', context=context)
 

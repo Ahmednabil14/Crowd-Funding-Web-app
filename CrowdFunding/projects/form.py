@@ -1,5 +1,5 @@
 from django import forms
-from projects.models import Project , Comment
+from projects.models import Project , Comment, Tag
 
 class ProjectForm(forms.ModelForm):
     title = forms.CharField(
@@ -11,6 +11,13 @@ class ProjectForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Description'}),
         label='Description'
     )
+
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        label='Tags'
+    )
+
     total_target = forms.DecimalField(
         widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Target'}),
         label='Target'
@@ -29,7 +36,7 @@ class ProjectForm(forms.ModelForm):
 
     class Meta:
         model = Project
-        fields = ('title', 'details', 'total_target', 'project_pic', 'end_time')
+        fields = ('title', 'details', 'tags', 'total_target', 'project_pic', 'end_time')
     
 
 class CommentForm(forms.ModelForm):

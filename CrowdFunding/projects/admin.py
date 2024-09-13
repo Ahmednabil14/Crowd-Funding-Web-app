@@ -1,5 +1,5 @@
 from django.contrib import admin
-from projects.models import Project , Comment
+from projects.models import Project , Comment, Tag
 # Register your models here.
 
 @admin.register(Comment)
@@ -12,6 +12,6 @@ class CommentAdmin(admin.ModelAdmin):
     def approve_comments(self, request, queryset):
         queryset.update(active=True)
 
-
+admin.site.register(Tag)
 
 admin.site.register(Project)   

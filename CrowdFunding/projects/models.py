@@ -4,6 +4,12 @@ from django.db.models import JSONField,Avg
 from users.models import User
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class Project(models.Model):
 
     title = models.CharField(max_length=255)
@@ -11,6 +17,7 @@ class Project(models.Model):
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     total_target = models.DecimalField(max_digits=10, decimal_places=2)
     total_donations = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    tags = models.ManyToManyField(Tag)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField()
     project_pic = models.ImageField(upload_to="projects/images/profile_image", null=True, blank=True)
@@ -68,3 +75,4 @@ class Rating(models.Model):
 
     def __str__(self):
         return f'{self.value} stars for {self.project.title}'
+    
