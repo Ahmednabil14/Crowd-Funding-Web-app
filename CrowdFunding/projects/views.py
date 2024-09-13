@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from .form import ProjectForm , CommentForm
-from .models import Project, Comment,Rating
+from .form import ProjectForm , CommentForm, ReportProjectForm
+from .models import Project, Comment,Rating, ProjectReport
 from decimal import Decimal
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView
@@ -73,8 +73,26 @@ def show_project(request, id):
     new_comment = None
     comment_form=None
     rating=None
+    project_report_form = ReportProjectForm()
 
     if request.method == "POST":
+        
+        # Handle report submission
+        if 'content' in request.POST:
+            project_report_form = ReportProjectForm(request.POST)
+            if project_report_form.is_valid():
+                try:
+                    report = ProjectReport.objects.create(
+                        project=project,
+                        user=request.user,
+                        content=project_report_form.cleaned_data['content']
+                    )
+                    messages.success(request, "Project report submitted successfully.")
+                except Exception as e:
+                    messages.error(request, f"Failed to submit project report: {str(e)}")
+                return redirect('show_project', id=id)
+                
+
         # Handle donation
         amount = Decimal(request.POST.get('amount', '0'))
         if amount > 0:
@@ -118,6 +136,7 @@ def show_project(request, id):
                     messages.warning(request, 'Please Login First')
     else:
         comment_form = CommentForm()
+        project_report_form = ReportProjectForm()
 
         if request.user.is_authenticated:
             rating = Rating.objects.filter(project=project, user=request.user).first()
@@ -134,6 +153,7 @@ def show_project(request, id):
         'comment_form': comment_form,
         'rating': rating,
         'user_donation': user_donation,
+        'project_report_form': project_report_form,
         'similar_projects':similar_projects
 
     }

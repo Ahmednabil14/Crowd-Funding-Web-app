@@ -1,5 +1,5 @@
 from django import forms
-from projects.models import Project , Comment, Category, Tag
+from projects.models import Project , Comment, Category, Tag, ProjectReport
 
 
 class ProjectForm(forms.ModelForm):
@@ -56,3 +56,16 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('comment',)
+
+
+class ReportProjectForm(forms.ModelForm):
+    content = forms.CharField(
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Report'}),
+        label='Report'
+    )
+
+    class Meta:
+        model = ProjectReport
+        fields = ('content',)
+

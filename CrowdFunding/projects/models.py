@@ -1,14 +1,15 @@
 from django.db import models
 from users.models import User
 from django.db.models import JSONField,Avg 
-from users.models import User
-
 
 class Category(models.Model):
     category = models.CharField(max_length=255)
 
     def __str__(self):
         return self.category
+    
+    
+
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -56,6 +57,15 @@ class Project(models.Model):
         else:
             self.average_rating = 0.00
         self.save()
+
+class ProjectReport(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.content
 
 class Comment(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name='comments')
