@@ -1,7 +1,9 @@
 from django import forms
-from projects.models import Project , Comment
+from projects.models import Project , Comment, Category
+
 
 class ProjectForm(forms.ModelForm):
+
     title = forms.CharField(
         max_length=255,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Title'}),
@@ -23,6 +25,12 @@ class ProjectForm(forms.ModelForm):
     end_time = forms.DateField(
         widget=forms.TextInput(attrs={'class': 'form-control', 'type':'date'}),
         label='End Date'
+    )
+
+    category = forms.ModelChoiceField(
+        queryset = Category.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}), 
+        label='Category'
     )
 
 

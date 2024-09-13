@@ -4,6 +4,11 @@ from django.db.models import JSONField
 from users.models import User
 
 
+class Category(models.Model):
+    category = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.category
 class Project(models.Model):
 
     title = models.CharField(max_length=255)
@@ -15,6 +20,7 @@ class Project(models.Model):
     project_pic = models.ImageField(upload_to="projects/images/profile_image", null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     donations = JSONField(default=dict)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.title
