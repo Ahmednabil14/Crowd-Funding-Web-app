@@ -10,18 +10,21 @@ from django.http import HttpResponseRedirect
 
 
 def create_project(request):
-    context = {}
-    form = ProjectForm()
-    context["form"] = form
-    if request.method == "POST":
-        form = ProjectForm(request.POST, request.FILES)
-        if form.is_valid():
-            data = form.cleaned_data
-            tags = form.cleaned_data['tags']
-            del data['tags']
-            project = Project.objects.create(user=request.user, **data)
-            project.tags.set(tags)
-            return redirect("home")
+    if request.user.is_authenticated:
+        context = {}
+        form = ProjectForm()
+        context["form"] = form
+        if request.method == "POST":
+            form = ProjectForm(request.POST, request.FILES)
+            if form.is_valid():
+                data = form.cleaned_data
+                tags = form.cleaned_data['tags']
+                del data['tags']
+                project = Project.objects.create(user=request.user, **data)
+                project.tags.set(tags)
+                return redirect("home")
+    else:
+        return redirect('login')
     return render(request, 'create_project.html', context=context)
 
 def edit_project(request,id):
@@ -51,6 +54,10 @@ def delete_project(request,id):
         if project.total_donations < project.total_target * Decimal(0.25):
             project.delete()
             return redirect('home')
+        else:
+            messages.warning(request, "Project cannot be deleted as Donations are more than 25%")
+            return redirect('show_project',id=id)
+
 
 def home(request):
     context = {}
@@ -62,6 +69,7 @@ def show_project(request, id):
     project = get_object_or_404(Project, pk=id)
     comments = project.comments.filter(active=True)
     new_comment = None
+    comment_form=None
     rating=None
 
     if request.method == "POST":
@@ -74,15 +82,20 @@ def show_project(request, id):
             messages.error(request, 'Invalid donation amount.')
 
         # Handle comment submission
-        comment_form = CommentForm(data=request.POST)
-        if comment_form.is_valid():
-            new_comment = Comment.objects.create(project=project, user=request.user,
-                                   comment=comment_form.cleaned_data.get('comment'), active=True)
-            messages.success(request, 'Your comment has been posted.')
-            comments = project.comments.filter(active=True)
+        if request.user.is_authenticated:
+
+            comment_form = CommentForm(data=request.POST)
+            if comment_form.is_valid():
+                new_comment = Comment.objects.create(project=project, user=request.user,
+                                    comment=comment_form.cleaned_data.get('comment'), active=True)
+                messages.success(request, 'Your comment has been posted.')
+                comments = project.comments.filter(active=True)
+            else:
+                messages.error(request, 'There was an error with your comment.')
         else:
-            messages.error(request, 'There was an error with your comment.')
-    
+                messages.error(request, 'Please Login First')
+
+        
  # Handle rating submission
         if 'rating' in request.POST:
             rating_value = request.POST.get('rating')
@@ -101,11 +114,6 @@ def show_project(request, id):
                     messages.success(request, 'Your rating has been submitted.')
                 else:
                     messages.warning(request, 'Please Login First')
-
-            else:
-                messages.error(request, 'Invalid rating value.')
-        else:
-            messages.error(request, 'Rating value is required.')
     else:
         comment_form = CommentForm()
 

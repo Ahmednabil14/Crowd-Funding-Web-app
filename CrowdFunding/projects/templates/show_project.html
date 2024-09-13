@@ -15,6 +15,9 @@
 {% endfor %}
 {% endif %}
 
+
+
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6 mb-4">
@@ -26,7 +29,13 @@
                     <p class="card-text fw-bold text-center mb-2">Target: {{ project.total_target }} $</p>
                     <p class="card-text fw-bold text-center mb-2">Total Donations: {{ project.total_donations }} $</p>
                     <p class="card-text text-center mb-4" style="color: rgba(0, 0, 0, .6);"> {{ project.details }}</p>
-                    <p class="card-text text-center fw-bold" style="color: rgba(0, 0, 0, .6);">End Date: {{ project.end_time }}</p>
+                    <p class="card-text text-center mb-4" style="color: rgba(0, 0, 0, .6);">
+                        {% for tag in project.tags.all %}
+                            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            No tags
+                        {% endfor %}
+                    </p>                    <p class="card-text text-center fw-bold" style="color: rgba(0, 0, 0, .6);">End Date: {{ project.end_time }}</p>
                     
                     <div class="d-flex flex-column align-items-center">
                         <div class="d-flex mb-4">

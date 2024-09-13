@@ -87,6 +87,7 @@ def user_Info(request):
     if not request.user.is_authenticated:
         return redirect('login')
     projects_with_donations = Project.objects.filter(donations__has_key=str(request.user.id))
+    user_projects=Project.objects.filter(user=request.user)
 
     user_donations = []
     for project in projects_with_donations:
@@ -95,8 +96,9 @@ def user_Info(request):
             'project': project,
             'donation_amount': donation_amount
         })
-    
-    return render(request, 'user.html', {'user': request.user,  'user_donations': user_donations})
+
+
+    return render(request, 'user.html', {'user': request.user,  'user_donations': user_donations,'user_projects': user_projects})
 
 
 
