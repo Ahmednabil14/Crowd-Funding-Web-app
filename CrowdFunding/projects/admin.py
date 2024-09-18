@@ -1,5 +1,5 @@
 from django.contrib import admin
-from projects.models import Project , Comment, Category, Tag
+from projects.models import Project , Comment, Category, Tag, ProjectReport, Rating
 # Register your models here.
 
 @admin.register(Comment)
@@ -12,8 +12,9 @@ class CommentAdmin(admin.ModelAdmin):
     def approve_comments(self, request, queryset):
         queryset.update(active=True)
 
-# admin.site.register(Tag)
 
 admin.site.register(Project)   
 admin.site.register(Category) 
-admin.site.register(Tag) 
+admin.site.register(Tag)
+admin.site.register(ProjectReport)
+admin.site.register(Rating)

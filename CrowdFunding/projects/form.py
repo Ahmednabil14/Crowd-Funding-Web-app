@@ -50,6 +50,7 @@ class ProjectForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     comment = forms.CharField(
         max_length=255,
+        required=False,
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Comment'}),
         label='Comment'
     )

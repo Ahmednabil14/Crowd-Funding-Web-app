@@ -98,22 +98,26 @@ def show_project(request, id):
         if amount > 0:
             project.add_donation(amount, request.user)
             messages.success(request, f'Thank you for your contribution of {amount}.')
+            return redirect('show_project', id=id)
         else:
             messages.error(request, 'Invalid donation amount.')
+        
 
         # Handle comment submission
-        if request.user.is_authenticated:
+        if 'comment' in request.POST:
+            if request.user.is_authenticated:
 
-            comment_form = CommentForm(data=request.POST)
-            if comment_form.is_valid():
-                new_comment = Comment.objects.create(project=project, user=request.user,
-                                    comment=comment_form.cleaned_data.get('comment'), active=True)
-                messages.success(request, 'Your comment has been posted.')
-                comments = project.comments.filter(active=True)
+                comment_form = CommentForm(data=request.POST)
+                if comment_form.is_valid():
+                    new_comment = Comment.objects.create(project=project, user=request.user,
+                                        comment=comment_form.cleaned_data.get('comment'), active=True)
+                    messages.success(request, 'Your comment has been posted.')
+                    comments = project.comments.filter(active=True)
+                    return redirect('show_project', id=id)
+                else:
+                    messages.error(request, 'There was an error with your comment.')
             else:
-                messages.error(request, 'There was an error with your comment.')
-        else:
-                messages.error(request, 'Please Login First')
+                    messages.error(request, 'Please Login First')
 
         
  # Handle rating submission
@@ -132,6 +136,7 @@ def show_project(request, id):
                         rating.save()
                     project.update_average_rating()
                     messages.success(request, 'Your rating has been submitted.')
+                    return redirect('show_project', id=id)
                 else:
                     messages.warning(request, 'Please Login First')
     else:

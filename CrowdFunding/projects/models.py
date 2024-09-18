@@ -25,7 +25,7 @@ class Project(models.Model):
     total_donations = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     tags = models.ManyToManyField(Tag)
     start_time = models.DateTimeField(auto_now_add=True)
-    end_time = models.DateTimeField()
+    end_time = models.DateField()
     project_pic = models.ImageField(upload_to="projects/images/profile_image", null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     donations = JSONField(default=dict)
